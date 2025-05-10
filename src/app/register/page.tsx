@@ -21,7 +21,8 @@ export default function Register() {
     setError(null);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      // Créer un nouvel utilisateur avec Supabase Auth
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
