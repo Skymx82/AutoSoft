@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AutoSoft - Logiciel de Gestion d'Auto-École
 
-## Getting Started
+AutoSoft est une application SaaS multi-tenant conçue pour la gestion complète d'auto-écoles. Développée avec Next.js et Supabase, elle permet de gérer les élèves, les moniteurs, le planning, la comptabilité et bien plus encore.
 
-First, run the development server:
+## Caractéristiques
+
+- **Architecture multi-tenant** : Isolation des données par auto-école avec possibilité de navigation entre bureaux
+- **Gestion des élèves** : Suivi des progrès, documents, et parcours de formation
+- **Planning intelligent** : Organisation des leçons et optimisation du temps des moniteurs
+- **Gestion financière** : Suivi des paiements, facturation et analyse des revenus
+- **Tableau de bord** : Visualisation des statistiques clés et notes importantes
+- **Authentification sécurisée** : Gestion des utilisateurs avec différents rôles (admin, directeur, moniteur, etc.)
+
+## Prérequis
+
+- Node.js (version 18 ou supérieure)
+- Compte Supabase (pour la base de données PostgreSQL)
+
+## Configuration
+
+1. Clonez ce dépôt
+2. Installez les dépendances :
+   ```bash
+   npm install
+   ```
+3. Créez un fichier `.env.local` à la racine du projet avec les variables suivantes :
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=votre_url_supabase
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=votre_clé_anon_supabase
+   ```
+
+4. Configurez votre base de données Supabase en important le schéma SQL fourni dans `/database_schema.sql`
+
+5. Configurez les politiques RLS (Row Level Security) dans Supabase pour l'isolation des données multi-tenant
+
+## Démarrage
+
+Lancez le serveur de développement :
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Structure du projet
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/                # Pages de l'application (Next.js App Router)
+│   ├── dashboard/      # Tableau de bord et fonctionnalités principales
+│   ├── login/          # Page de connexion
+│   └── page.tsx        # Page d'accueil
+├── lib/                # Bibliothèques et utilitaires
+│   └── supabase.ts     # Configuration de Supabase
+└── middleware.ts       # Middleware pour l'authentification et l'isolation multi-tenant
+```
 
-## Learn More
+## Architecture multi-tenant
 
-To learn more about Next.js, take a look at the following resources:
+AutoSoft utilise une architecture multi-tenant basée sur Row Level Security (RLS) dans PostgreSQL :
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Chaque table contient une colonne `id_ecole` qui sert d'identifiant de tenant
+- Les tables incluent également une colonne `id_bureau` pour permettre l'affichage par bureau
+- Le middleware Next.js vérifie l'authentification et ajoute l'ID du tenant aux en-têtes des requêtes
+- Les politiques RLS dans Supabase assurent que chaque utilisateur n'accède qu'aux données de son auto-école
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Déploiement
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Cette application peut être déployée sur n'importe quelle plateforme supportant Next.js, comme Vercel, Netlify ou un serveur personnalisé.
+# autosoft
